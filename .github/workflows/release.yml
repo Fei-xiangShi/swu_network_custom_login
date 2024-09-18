@@ -14,11 +14,13 @@ jobs:
           - x86_64-unknown-linux-gnu
           - i686-unknown-linux-gnu
           - aarch64-unknown-linux-gnu
-          - loongarch64-unknown-linux-gnu
-          - mips64-unknown-linux-gnuabi64
           - powerpc64le-unknown-linux-gnu
           - riscv64gc-unknown-linux-gnu
           - s390x-unknown-linux-gnu
+          - x86_64-unknown-freebsd
+          - x86_64-unknown-illumos
+          - armv7-unknown-linux-gnueabihf
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -35,24 +37,11 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y gcc-multilib
-          if [ "${{ matrix.target }}" == "aarch64-unknown-linux-gnu" ]; then
-            sudo apt-get install -y gcc-aarch64-linux-gnu
-          elif [ "${{ matrix.target }}" == "i686-unknown-linux-gnu" ]; then
-            sudo apt-get install -y gcc-multilib
-          elif [ "${{ matrix.target }}" == "loongarch64-unknown-linux-gnu" ]; then
-            sudo apt-get install -y gcc-loongarch64-linux-gnu
-          elif [ "${{ matrix.target }}" == "mips64-unknown-linux-gnuabi64" ]; then
-            sudo apt-get install -y gcc-mips64-linux-gnuabi64
-          elif [ "${{ matrix.target }}" == "powerpc64le-unknown-linux-gnu" ]; then
-            sudo apt-get install -y gcc-powerpc64le-linux-gnu
-          elif [ "${{ matrix.target }}" == "riscv64gc-unknown-linux-gnu" ]; then
-            sudo apt-get install -y gcc-riscv64-linux-gnu
-          elif [ "${{ matrix.target }}" == "s390x-unknown-linux-gnu" ]; then
-            sudo apt-get install -y gcc-s390x-linux-gnu
-          fi
 
       - name: Build
-        run: cargo build --release --target ${{ matrix.target }}
+        run: |
+          cargo install cross
+          cross build --release --target ${{ matrix.target }}
 
       - name: Archive binary
         run: |
