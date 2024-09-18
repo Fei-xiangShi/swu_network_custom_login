@@ -114,16 +114,21 @@ jobs:
         run: cargo build --release --target ${{ matrix.target }}
 
       - name: Archive binary
+        shell: pwsh
         run: |
-          mkdir artifacts
-          cd artifacts
-          mkdir ${{ matrix.target }}
-          cd ..
-          copy target\${{ matrix.target }}\release\swu_network_custom_login.exe artifacts\${{ matrix.target }}\
+          New-Item -Path "artifacts" -ItemType Directory -Force
+          New-Item -Path "artifacts/${{ matrix.target }}" -ItemType Directory -Force
+      
+          if (${{ matrix.target }} -like "*windows*") {
+            Copy-Item "target/${{ matrix.target }}/release/swu_network_custom_login.exe" -Destination "artifacts/${{ matrix.target }}/"
 
-          cd artifacts\${{ matrix.target }}
-          tar -czvf ..\..\${{ matrix.target }}.tar.gz *
-          cd ..\..
+            Compress-Archive -Path "artifacts/${{ matrix.target }}/*" -DestinationPath "${{ matrix.target }}.zip"
+          } else {
+
+            Copy-Item "target/${{ matrix.target }}/release/swu_network_custom_login" -Destination "artifacts/${{ matrix.target }}/"
+            
+            tar -czvf "${{ matrix.target }}.tar.gz" -C "artifacts/${{ matrix.target }}" .
+          }
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
@@ -151,4 +156,5 @@ jobs:
           tag: ${{ github.ref }}
           name: Release ${{ github.ref }}
           draft: false
+          replacesArtifacts: true
           prerelease: false
