@@ -14,7 +14,9 @@ use num_bigint::{BigInt, Sign};
 use hex;
 
 fn main() {
-    env_logger::init();
+    env_logger::Builder::from_default_env()
+        .filter(None, log::LevelFilter::Info)
+        .init();
     info!("Starting the application...");
 
     loop {
