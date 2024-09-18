@@ -106,7 +106,7 @@ fn get_account() -> Account {
             Some(u) => u.to_string(),
             None => {
                 error!("Invalid account line (missing username): {}", account_line);
-                continue;  // 无效行，跳过
+                continue;
             }
         };
 
@@ -114,11 +114,11 @@ fn get_account() -> Account {
             Some(p) => p.to_string(),
             None => {
                 error!("Invalid account line (missing password): {}", account_line);
-                continue;  // 无效行，跳过
+                continue;
             }
         };
 
-        return Account { username, password };  // 返回有效账户
+        return Account { username, password };
     }
 
     error!("No valid account found in accounts.txt");

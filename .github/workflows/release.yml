@@ -2,8 +2,6 @@ name: Build and Release
 
 on:
   push:
-    branches:
-      - main
     tags:
       - 'v*'
   pull_request:
@@ -124,11 +122,10 @@ jobs:
         run: |
           New-Item -Path "artifacts" -ItemType Directory -Force
           New-Item -Path "artifacts/${{ matrix.target }}" -ItemType Directory -Force
+          Copy-Item "target/${{ matrix.target }}/release/swu_network_custom_login*" -Destination "artifacts/${{ matrix.target }}/"
           if ("${{ matrix.target }}" -like "*windows*") {
-            Copy-Item "target/${{ matrix.target }}/release/swu_network_custom_login.exe" -Destination "artifacts/${{ matrix.target }}/"
             Compress-Archive -Path "artifacts/${{ matrix.target }}/*" -DestinationPath "${{ matrix.target }}.zip"
           } else {
-            Copy-Item "target/${{ matrix.target }}/release/swu_network_custom_login" -Destination "artifacts/${{ matrix.target }}/"
             tar -czvf "${{ matrix.target }}.tar.gz" -C "artifacts/${{ matrix.target }}" .
           }
 
@@ -136,7 +133,9 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.target }}
-          path: ${{ matrix.target }}.tar.gz
+          path: |
+            ${{ matrix.target }}.tar.gz
+            ${{ matrix.target }}.zip
 
   release:
     needs:
@@ -153,12 +152,12 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "artifacts/**/*.tar.gz"
+          artifacts: "artifacts/**/*.tar.gz, artifacts/**/*.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
           body: |
-            # 🚀 New Release: SWU Network Custom Login Client V${{ github.ref_name }}
+            # 🚀 New Release: SWU Network Custom Login Client ${{ github.ref_name }}
 
             We are excited to announce the latest release of **SWU Network Custom Login Client**, a lightweight, customizable network login client that supports a wide range of platforms and architectures. This version introduces enhanced multi-platform support, stability improvements, and bug fixes.
 
