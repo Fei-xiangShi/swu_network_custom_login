@@ -1,8 +1,14 @@
 name: Build and Release
 
 on:
-  release:
-    types: [created]
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build_linux:
@@ -118,15 +124,11 @@ jobs:
         run: |
           New-Item -Path "artifacts" -ItemType Directory -Force
           New-Item -Path "artifacts/${{ matrix.target }}" -ItemType Directory -Force
-      
-          if (${{ matrix.target }} -like "*windows*") {
+          if ("${{ matrix.target }}" -like "*windows*") {
             Copy-Item "target/${{ matrix.target }}/release/swu_network_custom_login.exe" -Destination "artifacts/${{ matrix.target }}/"
-
             Compress-Archive -Path "artifacts/${{ matrix.target }}/*" -DestinationPath "${{ matrix.target }}.zip"
           } else {
-
             Copy-Item "target/${{ matrix.target }}/release/swu_network_custom_login" -Destination "artifacts/${{ matrix.target }}/"
-            
             tar -czvf "${{ matrix.target }}.tar.gz" -C "artifacts/${{ matrix.target }}" .
           }
 
@@ -153,8 +155,66 @@ jobs:
         with:
           artifacts: "artifacts/**/*.tar.gz"
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.ref }}
-          name: Release ${{ github.ref }}
+          tag: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body: |
+            # 🚀 New Release: SWU Network Custom Login Client V${{ github.ref_name }}
+
+            We are excited to announce the latest release of **SWU Network Custom Login Client**, a lightweight, customizable network login client that supports a wide range of platforms and architectures. This version introduces enhanced multi-platform support, stability improvements, and bug fixes.
+
+            ## 🌟 Key Features
+
+            - **Automatic Network Detection**: Seamlessly monitors and detects network connectivity, initiating login when necessary.
+            - **Password Encryption**: Ensures secure login by encrypting passwords when needed.
+            - **Multi-Platform Support**: Precompiled binaries available for **Windows**, **macOS**, **Linux**, and **OpenWRT** devices.
+            - **Lightweight and Efficient**: Optimized for minimal resource consumption, perfect for devices with limited capabilities.
+
+            ## 📥 Downloads
+
+            Download the appropriate binary for your platform below. Each binary is packaged as a `.tar.gz` file. Extract it and run the executable.
+
+            | Platform         | Architecture       | Download Link                                                                                                                                     |
+            |------------------|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
+            | **Windows**      | x86_64             | [Download](${{ github.server_url }}/${{ github.repository }}/releases/download/${{ github.ref_name }}/x86_64-pc-windows-msvc.zip)                 |
+            |                  | x86                | [Download](${{ github.server_url }}/${{ github.repository }}/releases/download/${{ github.ref_name }}/i686-pc-windows-msvc.zip)                   |
+            |                  | ARM64              | [Download](${{ github.server_url }}/${{ github.repository }}/releases/download/${{ github.ref_name }}/aarch64-pc-windows-msvc.zip)                |
+            | **macOS**        | x86_64             | [Download](${{ github.server_url }}/${{ github.repository }}/releases/download/${{ github.ref_name }}/x86_64-apple-darwin.tar.gz)                 |
+            |                  | ARM64              | [Download](${{ github.server_url }}/${{ github.repository }}/releases/download/${{ github.ref_name }}/aarch64-apple-darwin.tar.gz)                |
+            | **Linux**        | x86_64             | [Download](${{ github.server_url }}/${{ github.repository }}/releases/download/${{ github.ref_name }}/x86_64-unknown-linux-gnu.tar.gz)            |
+            |                  | x86                | [Download](${{ github.server_url }}/${{ github.repository }}/releases/download/${{ github.ref_name }}/i686-unknown-linux-gnu.tar.gz)              |
+            |                  | ARM64              | [Download](${{ github.server_url }}/${{ github.repository }}/releases/download/${{ github.ref_name }}/aarch64-unknown-linux-gnu.tar.gz)           |
+            |                  | Armv7              | [Download](${{ github.server_url }}/${{ github.repository }}/releases/download/${{ github.ref_name }}/armv7-unknown-linux-gnueabihf.tar.gz)       |
+            |                  | PowerPC64          | [Download](${{ github.server_url }}/${{ github.repository }}/releases/download/${{ github.ref_name }}/powerpc64le-unknown-linux-gnu.tar.gz)       |
+            |                  | RISC-V64           | [Download](${{ github.server_url }}/${{ github.repository }}/releases/download/${{ github.ref_name }}/riscv64gc-unknown-linux-gnu.tar.gz)         |
+            |                  | S390x              | [Download](${{ github.server_url }}/${{ github.repository }}/releases/download/${{ github.ref_name }}/s390x-unknown-linux-gnu.tar.gz)             |
+            | **FreeBSD**      | x86_64             | [Download](${{ github.server_url }}/${{ github.repository }}/releases/download/${{ github.ref_name }}/x86_64-unknown-freebsd.tar.gz)              |
+            | **Illumos**      | x86_64             | [Download](${{ github.server_url }}/${{ github.repository }}/releases/download/${{ github.ref_name }}/x86_64-unknown-illumos.tar.gz)              |
+
+            > 💡 **Tip**: Need help choosing the correct version? Refer to the platform's architecture you're running on or consult the [Supported Platforms](#supported-platforms) section below.
+
+            ## 🚀 How to Install
+
+            1. **Download**: Click on the download link for your platform from the table above.
+            2. **Extract**: Use the following command to extract the downloaded `.tar.gz` or `.zip` file:
+              ```bash
+              tar -xzvf swu_network_custom_login.tar.gz
+              ```
+              or, for `.zip` files (Windows):
+              ```powershell
+              Expand-Archive -Path swu_network_custom_login.zip -DestinationPath .\
+              ```
+            3. Run: Execute the binary:
+              ```bash
+              ./swu_network_custom_login
+              ```
+            ## Supported Platforms
+            This release supports the following platforms:
+
+            - **Windows:** x86, x86_64, ARM64
+            - **macOS:** x86_64, ARM64 (Apple Silicon)
+            - **Linux:** x86, x86_64, ARM64, PowerPC64, RISC-V64, S390x, Armv7
+            - **FreeBSD:** x86_64
+            - **Illumos:** x86_64
           draft: false
           replacesArtifacts: true
           prerelease: false
