@@ -1,5 +1,5 @@
 use std::fs::File;
-use std::io::{self, BufRead};
+use std::io::{self, BufRead, Write};
 use std::time::Duration;
 use std::{env, thread};
 
@@ -57,6 +57,27 @@ struct Account {
 }
 
 fn get_account() -> Account {
+    use std::path::Path;
+
+    if !Path::new("accounts.txt").exists() {
+        warn!("accounts.txt not found. Creating a new one with example account.");
+        let mut file = match File::create("accounts.txt") {
+            Ok(f) => f,
+            Err(e) => {
+                error!("Failed to create accounts.txt: {}", e);
+                panic!("{}", e);
+            }
+        };
+
+        let example_content = "username password\n";
+        if let Err(e) = file.write_all(example_content.as_bytes()) {
+            error!("Failed to write to accounts.txt: {}", e);
+            panic!("{}", e);
+        }
+        info!("Created accounts.txt with example account. Please edit this file and rerun the program.");
+        std::process::exit(1);
+    }
+
     let file = match File::open("accounts.txt") {
         Ok(f) => f,
         Err(e) => {
@@ -70,7 +91,8 @@ fn get_account() -> Account {
 
     if accounts.is_empty() {
         error!("No accounts found in accounts.txt");
-        panic!("No accounts found");
+        info!("Please add your account credentials to accounts.txt and rerun the program.");
+        std::process::exit(1);
     }
 
     let mut rng = rand::thread_rng();
