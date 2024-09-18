@@ -46,11 +46,14 @@ Download the precompiled binary for your platform from the [Releases](https://gi
   - x86_64 (`x86_64-unknown-linux-gnu`)
   - x86 (`i686-unknown-linux-gnu`)
   - ARM64 (`aarch64-unknown-linux-gnu`)
-  - LoongArch64 (`loongarch64-unknown-linux-gnu`)
-  - MIPS64 (`mips64-unknown-linux-gnuabi64`)
+  - ARMV7 (`armv7-unknown-linux-gnueabihf`)
   - PowerPC64 (`powerpc64le-unknown-linux-gnu`)
   - RISC-V64 (`riscv64gc-unknown-linux-gnu`)
   - S390x (`s390x-unknown-linux-gnu`)
+- **FreeBSD**
+  - x86_64 (`x86_64-unknown-freebsd`)
+- **Illumos**
+  - x86_64 (`x86_64-unknown-illumos`)
 
 **Steps:**
 
@@ -145,9 +148,7 @@ The client supports a wide range of platforms and architectures, making it versa
 **Platforms and Architectures:**
 
 - **Windows:** x86, x86_64, ARM64
-
 - **macOS:** x86_64, ARM64 (Apple Silicon)
-
 - **Linux:** x86, x86_64, ARM64, LoongArch64, MIPS64, PowerPC64, RISC-V64, S390x
 
 ## Contributing

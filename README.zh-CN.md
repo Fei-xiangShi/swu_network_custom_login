@@ -1,4 +1,3 @@
-
 # 西南大学校园网自定义登录客户端
 
 这是一个为西南大学（SWU）定制的网络登录客户端，能够自动检测网络连接状态并在需要时执行登录操作。该客户端由Rust编写，支持多种平台，包括Windows、macOS、Linux以及适用于OpenWRT设备的各种架构。
@@ -51,11 +50,16 @@ zh-CN [简体中文](https://github.com/Fei-xiangShi/swu_network_custom_login/bl
   - x86_64 (`x86_64-unknown-linux-gnu`)
   - x86 (`i686-unknown-linux-gnu`)
   - ARM64 (`aarch64-unknown-linux-gnu`)
-  - LoongArch64 (`loongarch64-unknown-linux-gnu`)
-  - MIPS64 (`mips64-unknown-linux-gnuabi64`)
+  - ARMV7 (`armv7-unknown-linux-gnueabihf`)
   - PowerPC64 (`powerpc64le-unknown-linux-gnu`)
   - RISC-V64 (`riscv64gc-unknown-linux-gnu`)
   - S390x (`s390x-unknown-linux-gnu`)
+- **FreeBSD**
+
+  - x86_64 (`x86_64-unknown-freebsd`)
+- **Illumos**
+
+  - x86_64 (`x86_64-unknown-illumos`)
 
 **步骤：**
 
@@ -65,9 +69,7 @@ zh-CN [简体中文](https://github.com/Fei-xiangShi/swu_network_custom_login/bl
    ```bash
    tar -xzvf swu_network_custom_login.tar.gz
    ```
-
-
-4. 将可执行文件放置在 `PATH`目录中，或直接运行它。
+3. 将可执行文件放置在 `PATH`目录中，或直接运行它。
 
 ### 从源码构建
 
