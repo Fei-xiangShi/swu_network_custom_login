@@ -18,7 +18,7 @@ fn main() {
     info!("Starting the application...");
 
     loop {
-        let verification_url = Url::parse("http://captive.apple.com").unwrap();
+        let verification_url = Url::parse("http://4.ipw.cn").unwrap();
         let (success, redirect_html_string) = verify_network_status(&verification_url);
         if !success && !redirect_html_string.is_empty() {
             let redirect_url = match get_redirect_url(&redirect_html_string) {
