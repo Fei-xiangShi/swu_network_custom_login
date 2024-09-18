@@ -96,29 +96,35 @@ fn get_account() -> Account {
     }
 
     let mut rng = rand::thread_rng();
-    let random_index = rng.gen_range(0..accounts.len());
 
-    let account_line = &accounts[random_index];
-    let mut fields = account_line.split_whitespace();
+    for _ in 0..accounts.len() {
+        let random_index = rng.gen_range(0..accounts.len());
+        let account_line = &accounts[random_index];
+        let mut fields = account_line.split_whitespace();
 
-    let username = match fields.next() {
-        Some(u) => u.to_string(),
-        None => {
-            error!("Invalid account line: {}", account_line);
-            panic!("Invalid account line");
-        }
-    };
+        let username = match fields.next() {
+            Some(u) => u.to_string(),
+            None => {
+                error!("Invalid account line (missing username): {}", account_line);
+                continue;  // 无效行，跳过
+            }
+        };
 
-    let password = match fields.next() {
-        Some(p) => p.to_string(),
-        None => {
-            error!("Invalid account line: {}", account_line);
-            panic!("Invalid account line");
-        }
-    };
+        let password = match fields.next() {
+            Some(p) => p.to_string(),
+            None => {
+                error!("Invalid account line (missing password): {}", account_line);
+                continue;  // 无效行，跳过
+            }
+        };
 
-    Account { username, password }
+        return Account { username, password };  // 返回有效账户
+    }
+
+    error!("No valid account found in accounts.txt");
+    std::process::exit(1);
 }
+
 
 fn login(username: &str, password: &str, redirect_url: &Url, need_encryption: bool) -> bool {
     let host = redirect_url.host_str().unwrap_or("");
