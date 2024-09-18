@@ -2,6 +2,12 @@
 
 A custom network login client for Southwest University (SWU) that automatically detects network connectivity and performs login operations when necessary. This client is written in Rust and supports multiple platforms, including Windows, macOS, Linux, and various architectures suitable for OpenWRT devices.
 
+## Readme Language
+
+en-US [English](#readme-language "English version readme")
+
+zh-CN [简体中文](https://github.com/Fei-xiangShi/swu_network_custom_login/blob/main/README.zh-CN.md "简体中文版简介")
+
 ## Features
 
 - **Automatic Network Detection**: Continuously monitors network status and initiates login when connectivity is lost.
@@ -25,7 +31,7 @@ A custom network login client for Southwest University (SWU) that automatically 
 
 ### Precompiled Binaries
 
-Download the precompiled binary for your platform from the [Releases](https://github.com/your_username/your_repository/releases) page.
+Download the precompiled binary for your platform from the [Releases](https://github.com/Fei-xiangShi/swu_network_custom_login/releases) page.
 
 **Available Platforms:**
 
